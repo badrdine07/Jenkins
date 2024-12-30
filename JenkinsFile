@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    environment {
+        // Configuration globale
+        MAVEN_HOME = 'C:\Users\asus\Downloads\apache-maven-3.9.9\bin' // Remplacez par le chemin de votre installation Maven
+        JAVA_HOME = 'C:\Program Files\Java\jdk-17'  // Remplacez par le chemin de votre installation Java 17
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Cloner le repository Git
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Nettoyage et compilation du projet Maven
+                sh "${MAVEN_HOME}/bin/mvn clean compile"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Exécution des tests unitaires
+                sh "${MAVEN_HOME}/bin/mvn test"
+            }
+        }
+
+        stage('Package') {
+            steps {
+                // Création de l'artefact JAR
+                sh "${MAVEN_HOME}/bin/mvn package"
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                // Sauvegarde du fichier JAR dans Jenkins
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Exemple de commande de déploiement. Remplacez par vos propres besoins.
+                sh """
+                echo 'Déploiement en cours...'
+                # Ajouter les étapes de déploiement ici (Docker, copie sur un serveur, etc.)
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            // Actions après pipeline (par ex., supprimer les fichiers temporaires)
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline terminé avec succès !'
+        }
+        failure {
+            echo 'Pipeline échoué !'
+        }
+    }
+}
