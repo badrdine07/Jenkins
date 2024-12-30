@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         // Configuration globale
-        MAVEN_HOME = 'C:\Users\asus\Downloads\apache-maven-3.9.9\bin' // Remplacez par le chemin de votre installation Maven
-        JAVA_HOME = 'C:\Program Files\Java\jdk-17'  // Remplacez par le chemin de votre installation Java 17
+        MAVEN_HOME = 'C:\\Users\\asus\\Downloads\\apache-maven-3.9.9'
+        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17'
     }
 
     stages {
@@ -18,21 +18,21 @@ pipeline {
         stage('Build') {
             steps {
                 // Nettoyage et compilation du projet Maven
-                sh "${MAVEN_HOME}/bin/mvn clean compile"
+                bat "${MAVEN_HOME}\\bin\\mvn clean compile"
             }
         }
 
         stage('Test') {
             steps {
                 // Exécution des tests unitaires
-                sh "${MAVEN_HOME}/bin/mvn test"
+                bat "${MAVEN_HOME}\\bin\\mvn test"
             }
         }
 
         stage('Package') {
             steps {
                 // Création de l'artefact JAR
-                sh "${MAVEN_HOME}/bin/mvn package"
+                bat "${MAVEN_HOME}\\bin\\mvn package"
             }
         }
 
@@ -45,11 +45,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Exemple de commande de déploiement. Remplacez par vos propres besoins.
-                sh """
+                // Exemple de commande de déploiement
                 echo 'Déploiement en cours...'
-                # Ajouter les étapes de déploiement ici (Docker, copie sur un serveur, etc.)
-                """
+                // Ajouter ici vos commandes de déploiement
             }
         }
     }
